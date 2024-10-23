@@ -1,0 +1,69 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+  <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md space-y-6">
+    <h1 class="text-3xl font-bold text-gray-800 text-center">
+      Inicio de Sesión
+    </h1>
+    <p class="text-gray-500 text-center">Bienvenido a e-tracker!</p>
+
+    <form class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700"
+          >Correo electrónico</label
+        >
+        <input
+          class="w-full p-3 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="hola@ejemplo.com"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700"
+          >Contraseña</label
+        >
+        <div class="relative">
+          <input
+            class="w-full p-3 mt-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+            [(ngModel)]="password"
+            name="password"
+            type="password"
+            placeholder="********"
+          />
+          <a
+            href="#"
+            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-500 text-sm"
+          >
+            Olvidaste tu contraseña?
+          </a>
+        </div>
+      </div>
+
+      <button
+        class="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 transition"
+        (click)="login()"
+      >
+        Ingresar
+      </button>
+
+      <div class="flex items-center justify-center space-x-2">
+        <hr class="max-w-full border-gray-300" />
+        <span class="text-sm text-gray-500">o inicia con</span>
+        <hr class="max-w-full border-gray-300" />
+      </div>
+
+      <button
+        class="w-full p-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition"
+      >
+        <span class="flex items-center justify-center space-x-2">
+          <img
+            src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+            alt="Google"
+            class="w-5 h-5"
+          />
+          <span>Continuar con Google</span>
+        </span>
+      </button>
+    </form>
+  </div>
+</div>
