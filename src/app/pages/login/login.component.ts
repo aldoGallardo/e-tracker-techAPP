@@ -1,5 +1,4 @@
-// src/app/pages/login/login.component.ts
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth.service';
@@ -12,23 +11,36 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
   imports: [FormsModule, CommonModule],
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   email = '';
   password = '';
+  emailError = signal<string | null>(null);
+  passwordError = signal<string | null>(null);
   authError = signal<string | null>(null);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  ngOnInit() {
-    console.log('LoginComponent loaded');
-  }
-
   async login() {
+    this.emailError.set(null);
+    this.passwordError.set(null);
+    this.authError.set(null);
+
+    if (!this.email.trim()) {
+      this.emailError.set('El correo electrónico es obligatorio.');
+    }
+    if (!this.password) {
+      this.passwordError.set('La contraseña es obligatoria.');
+    }
+    if (this.emailError() || this.passwordError()) {
+      return;
+    }
+
     try {
-      await this.authService.login(this.email, this.password);
+      const uid = await this.authService.login(this.email, this.password);
+      console.log('Login exitoso, UID:', uid);
       this.router.navigate(['/home']);
     } catch (error: any) {
-      this.authError.set(error.message || 'Ocurrió un error inesperado');
+      this.authError.set(error);
     }
   }
 }

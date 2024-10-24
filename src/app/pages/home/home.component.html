@@ -3,18 +3,22 @@
   <button
     (click)="toggleMenu()"
     class="absolute top-4 left-4 p-2 text-2xl bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none lg:hidden"
+    aria-label="Abrir menú"
   >
     ☰
   </button>
 
-  <!-- Overlay para cerrar el menú al hacer clic fuera -->
+  <!-- Overlay para cerrar el menú -->
   <div
-    *ngIf="isMenuOpen"
-    (click)="closeMenu()"
+    [ngClass]="{
+      'opacity-100 pointer-events-auto': isMenuOpen,
+      'opacity-0 pointer-events-none': !isMenuOpen
+    }"
     class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+    (click)="closeMenu()"
   ></div>
 
-  <!-- Menú lateral superpuesto -->
+  <!-- Menú lateral -->
   <aside
     [ngClass]="{
       'translate-x-0': isMenuOpen,
@@ -36,9 +40,11 @@
   <!-- Contenido principal -->
   <main class="h-full p-10 bg-gray-100">
     <div class="flex flex-col items-center justify-center h-full">
-      <h1 class="text-3xl font-bold text-gray-800 mb-10">Bienvenido</h1>
+      <h1 class="text-3xl font-bold text-gray-800 mb-10">
+        {{ userName ? "Bienvenido, " + userName + "!" : "Bienvenido!" }}
+      </h1>
 
-      <!-- Mostrar botón de asistencia si no se ha marcado asistencia -->
+      <!-- Botón para marcar asistencia -->
       <div *ngIf="!hasCheckedIn">
         <button
           (click)="markAttendance()"
@@ -48,39 +54,81 @@
         </button>
       </div>
 
-      <!-- Mostrar la tabla de asignaciones si ya se ha marcado asistencia -->
-      <div *ngIf="hasCheckedIn" class="w-full">
-        <h2 class="text-xl font-semibold text-gray-700 mb-6">
-          Mis Asignaciones
-        </h2>
-        <table
-          class="w-full border border-gray-300 bg-white rounded-lg shadow-md"
-        >
-          <thead>
-            <tr class="bg-blue-100 text-left">
-              <th class="p-3">Nombre</th>
-              <th class="p-3">Estado</th>
-              <th class="p-3">Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              *ngFor="let assignment of assignments"
-              class="border-b hover:bg-gray-100"
-            >
-              <td class="p-3">{{ assignment.name }}</td>
-              <td class="p-3">{{ assignment.status }}</td>
-              <td class="p-3">
-                <button
-                  (click)="startAssignment(assignment)"
-                  class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                >
-                  Iniciar
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- Tarjeta de asignaciones -->
+      <div
+        *ngIf="hasCheckedIn"
+        class="w-full max-w-4xl bg-white rounded-lg shadow-md p-6 space-y-6"
+      >
+        <!-- Pendientes -->
+        <div>
+          <h2 class="text-xl font-semibold text-gray-700 mb-4">Pendiente</h2>
+          <table
+            class="w-full border border-gray-300 bg-white rounded-lg shadow-md"
+          >
+            <thead>
+              <tr class="bg-blue-100 text-left">
+                <th class="p-3">Número de Orden</th>
+                <th class="p-3">Tipo de Actividad</th>
+                <th class="p-3">Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let assignment of pendingAssignments"
+                class="border-b hover:bg-gray-100"
+              >
+                <td class="p-3">{{ assignment.orderNumber }}</td>
+                <td class="p-3">
+                  {{ getActivityTypeName(assignment.activityType) }}
+                </td>
+                <td class="p-3">
+                  <button
+                    (click)="startAssignment(assignment)"
+                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  >
+                    Iniciar
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="pendingAssignments.length === 0">
+                <td colspan="3" class="text-center p-3 text-gray-500">
+                  No hay asignaciones pendientes.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Completadas -->
+        <div>
+          <h2 class="text-xl font-semibold text-gray-700 mb-4">Completada</h2>
+          <table
+            class="w-full border border-gray-300 bg-white rounded-lg shadow-md"
+          >
+            <thead>
+              <tr class="bg-blue-100 text-left">
+                <th class="p-3">Orden</th>
+                <th class="p-3">Tipo de Actividad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                *ngFor="let assignment of completedAssignments"
+                class="border-b hover:bg-gray-100"
+              >
+                <td class="p-3">{{ assignment.orderNumber }}</td>
+                <td class="p-3">
+                  {{ getActivityTypeName(assignment.activityType) }}
+                </td>
+              </tr>
+              <tr *ngIf="completedAssignments.length === 0">
+                <td colspan="2" class="text-center p-3 text-gray-500">
+                  No hay asignaciones completadas.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </main>
