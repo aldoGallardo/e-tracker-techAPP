@@ -1,3 +1,297 @@
-<div>
-  {{ assignment || "No hay" }}
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4">Detalles de la Asignación</h2>
+  <form *ngIf="assignment.status === 'completed'; else editableForm">
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700"
+        >Número de Orden:</label
+      >
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ assignment.orderNumber }}
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700"
+        >Descripción:</label
+      >
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ assignment.description }}
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Dirección:</label>
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ assignment.address }}
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700"
+        >Tipo de Actividad:</label
+      >
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ getActivityTypeName(assignment.activityType) }}
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Estado:</label>
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ assignment.status }}
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700"
+        >Fecha de Inicio:</label
+      >
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ assignment.startedAt | date : "short" }}
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700"
+        >Fecha de Finalización:</label
+      >
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ assignment.completedAt | date : "short" }}
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Duración:</label>
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ assignment.duration }} mins
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Comentario:</label>
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ assignment.comment }}
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700"
+        >Localización del Servicio:</label
+      >
+      <a
+        [href]="
+          'https://www.google.com/maps?q=' +
+          assignment.serviceLocation._latitude +
+          ',' +
+          assignment.serviceLocation._longitude
+        "
+        target="_blank"
+        class="text-blue-600 underline"
+      >
+        Ver en Google Maps
+      </a>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700"
+        >Fecha de Asignación:</label
+      >
+      <p class="p-2 border border-gray-300 rounded-md">
+        {{ assignment.assignmentDate | date : "short" }}
+      </p>
+    </div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700"
+        >Suministros Utilizados:</label
+      >
+      <div class="flex flex-wrap">
+        <span
+          *ngFor="let supply of assignment.neededSupply"
+          class="bg-gray-200 text-gray-700 py-1 px-3 m-1 rounded"
+        >
+          {{ supply }}
+        </span>
+      </div>
+    </div>
+    <div class="flex justify-end">
+      <button
+        type="button"
+        (click)="close()"
+        class="ml-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+      >
+        Cerrar
+      </button>
+    </div>
+  </form>
+  <ng-template #editableForm>
+    <form>
+      <div class="mb-4">
+        <label for="orderNumber" class="block text-sm font-medium text-gray-700"
+          >Número de Orden</label
+        >
+        <input
+          type="text"
+          id="orderNumber"
+          [(ngModel)]="assignment.orderNumber"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+          readonly
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="description" class="block text-sm font-medium text-gray-700"
+          >Descripción</label
+        >
+        <textarea
+          id="description"
+          [(ngModel)]="assignment.description"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+        ></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label for="address" class="block text-sm font-medium text-gray-700"
+          >Dirección</label
+        >
+        <input
+          type="text"
+          id="address"
+          [(ngModel)]="assignment.address"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label
+          for="activityType"
+          class="block text-sm font-medium text-gray-700"
+          >Tipo de Actividad</label
+        >
+        <input
+          type="text"
+          id="activityType"
+          [(ngModel)]="assignment.activityType"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+          readonly
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="status" class="block text-sm font-medium text-gray-700"
+          >Estado</label
+        >
+        <input
+          type="text"
+          id="status"
+          [(ngModel)]="assignment.status"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+          readonly
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="startedAt" class="block text-sm font-medium text-gray-700"
+          >Fecha de Inicio</label
+        >
+        <input
+          type="datetime-local"
+          id="startedAt"
+          [(ngModel)]="assignment.startedAt"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="completedAt" class="block text-sm font-medium text-gray-700"
+          >Fecha de Finalización</label
+        >
+        <input
+          type="datetime-local"
+          id="completedAt"
+          [(ngModel)]="assignment.completedAt"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="duration" class="block text-sm font-medium text-gray-700"
+          >Duración</label
+        >
+        <input
+          type="text"
+          id="duration"
+          [(ngModel)]="assignment.duration"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="comment" class="block text-sm font-medium text-gray-700"
+          >Comentario</label
+        >
+        <textarea
+          id="comment"
+          [(ngModel)]="assignment.comment"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+        ></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label
+          for="serviceLocation"
+          class="block text-sm font-medium text-gray-700"
+          >Localización del Servicio</label
+        >
+        <a
+          [href]="
+            'https://www.google.com/maps?q=' +
+            assignment.serviceLocation._latitude +
+            ',' +
+            assignment.serviceLocation._longitude
+          "
+          target="_blank"
+          class="text-blue-600 underline"
+        >
+          Ver en Google Maps
+        </a>
+      </div>
+
+      <div class="mb-4">
+        <label
+          for="assignmentDate"
+          class="block text-sm font-medium text-gray-700"
+          >Fecha de Asignación</label
+        >
+        <input
+          type="datetime-local"
+          id="assignmentDate"
+          [(ngModel)]="assignment.assignmentDate"
+          class="mt-1 p-2 block w-full border border-gray-300 rounded-md"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label
+          for="neededSupply"
+          class="block text-sm font-medium text-gray-700"
+          >Suministros Utilizados</label
+        >
+        <div class="flex flex-wrap">
+          <span
+            *ngFor="let supply of assignment.neededSupply"
+            class="bg-gray-200 text-gray-700 py-1 px-3 m-1 rounded"
+          >
+            {{ supply }}
+          </span>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button
+          type="button"
+          (click)="save()"
+          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        >
+          Guardar
+        </button>
+        <button
+          type="button"
+          (click)="close()"
+          class="ml-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        >
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </ng-template>
 </div>

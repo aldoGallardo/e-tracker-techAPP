@@ -6,15 +6,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
 import { AssignmentDetailComponent } from './assignment-detail/assignment-detail.component';
-
-declare function showNotification(message: string): void;
+import { MenuComponent } from './menu/menu.component';
+import { NotificationComponent } from './notification/notification.component';
 
 @Component({
   standalone: true,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [CommonModule, MatIconModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MenuComponent,
+    NotificationComponent,
+  ],
 })
 export class HomeComponent implements OnInit {
   userName: string | null = null;
@@ -22,6 +28,7 @@ export class HomeComponent implements OnInit {
   activityTypes: { [key: string]: string } = {}; // Definimos activityTypes
   isMenuOpen = false;
   hasCheckedIn = false;
+  notificationMessage: string | null = null; // Para el componente de notificación
   private apiService = inject(ApiService);
   private authService = inject(AuthService);
   private dialog = inject(MatDialog);
@@ -50,7 +57,8 @@ export class HomeComponent implements OnInit {
   }
 
   private showToast(message: string): void {
-    showNotification(message);
+    this.notificationMessage = message;
+    // Aquí puedes agregar lógica para mostrar la notificación
   }
 
   async markAttendance(): Promise<void> {
@@ -68,7 +76,7 @@ export class HomeComponent implements OnInit {
         .toPromise();
       this.showToast('Asistencia marcada exitosamente');
       this.hasCheckedIn = true; // Asegúrate de que se muestra la tabla
-      this.loadAssignments(); // Cargar asignaciones
+      this.loadAssignments(uid, true, false, false, false); // Cargar asignaciones
     } catch (error: any) {
       console.error('Error al marcar asistencia:', error);
       this.showToast(
@@ -77,18 +85,24 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private loadAssignments(): void {
-    const uid = this.authService.getUID();
-    if (!uid) return;
-    console.log(`Solicitando asignaciones con UID: ${uid}`);
-    this.apiService.getAssignments(uid).subscribe({
-      next: (data) => {
-        this.assignments = data;
-        this.loadActivityTypes();
-      },
-      error: (error) =>
-        console.error('Error al cargar las asignaciones:', error),
-    });
+  private loadAssignments(
+    identifier: string,
+    isGlobal: boolean,
+    isBranch: boolean,
+    isUser: boolean,
+    isAssignment: boolean
+  ): void {
+    console.log(`Solicitando asignaciones con identifier: ${identifier}`);
+    this.apiService
+      .getAssignments(identifier, isGlobal, isBranch, isUser, isAssignment)
+      .subscribe({
+        next: (data) => {
+          this.assignments = data;
+          this.loadActivityTypes();
+        },
+        error: (error) =>
+          console.error('Error al cargar las asignaciones:', error),
+      });
   }
 
   private loadActivityTypes(): void {

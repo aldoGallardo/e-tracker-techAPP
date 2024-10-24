@@ -1,4 +1,3 @@
-// src/app/core/api.service.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -14,9 +13,20 @@ export class ApiService {
     return this.http.get<any>(url);
   }
 
-  getAssignments(userId: string): Observable<any> {
-    const params = new HttpParams().set('filter', `userId=${userId}`);
-    return this.http.get<any>(`${this.baseUrl}/assignments`, { params });
+  getAssignments(
+    identifier: string,
+    isGlobal: boolean,
+    isBranch: boolean,
+    isUser: boolean,
+    isAssignment: boolean
+  ): Observable<any> {
+    let params = new HttpParams().set('identifier', identifier);
+    params = params.set('isGlobal', isGlobal.toString());
+    params = params.set('isBranch', isBranch.toString());
+    params = params.set('isUser', isUser.toString());
+    params = params.set('isAssignment', isAssignment.toString());
+
+    return this.http.get<any>(`${this.baseUrl}/assignments/filter`, { params });
   }
 
   getActivityType(activityTypeId: string): Observable<any> {

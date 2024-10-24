@@ -19,27 +19,14 @@
     (click)="closeMenu()"
   ></div>
 
-  <!-- Menú lateral -->
-  <aside
-    [ngClass]="{
-      'translate-x-0': isMenuOpen,
-      '-translate-x-full': !isMenuOpen
-    }"
-    class="fixed inset-y-0 left-0 w-64 bg-blue-600 text-white p-6 space-y-6 transition-transform transform lg:translate-x-0 z-50"
-  >
-    <h2 class="text-2xl font-bold">Menú</h2>
-    <nav class="space-y-4">
-      <a href="#" class="block hover:underline">Perfil</a>
-      <a href="#" class="block hover:underline">Historial de Actividades</a>
-      <a href="#" class="block hover:underline">Historial de Asistencias</a>
-      <button (click)="logout()" class="block text-red-400 hover:underline">
-        Cerrar Sesión
-      </button>
-    </nav>
-  </aside>
+  <!-- Componente de Menú -->
+  <app-menu [isMenuOpen]="isMenuOpen"></app-menu>
+
+  <!-- Componente de Notificación -->
+  <app-notification [message]="notificationMessage"></app-notification>
 
   <!-- Contenido principal -->
-  <main class="h-full p-2 bg-gray-100">
+  <main class="h-full p-2 bg-gray-100 overflow-y-auto">
     <div class="flex flex-col items-center justify-center h-full">
       <h1 class="text-3xl font-bold text-gray-800 mb-10">
         {{ userName ? "Bienvenido, " + userName + "!" : "Bienvenido!" }}
@@ -58,7 +45,7 @@
       <!-- Tarjeta de asignaciones -->
       <div
         *ngIf="hasCheckedIn"
-        class="w-full max-w-4xl bg-white rounded-lg shadow-md p-6 space-y-6"
+        class="w-full max-w-4xl bg-white rounded-lg shadow-md p-6 space-y-6 overflow-y-auto"
       >
         <!-- Pendientes -->
         <div>

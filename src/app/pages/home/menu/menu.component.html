@@ -1,0 +1,20 @@
+<aside
+  [ngClass]="{
+    'translate-x-0': isMenuOpen,
+    '-translate-x-full': !isMenuOpen
+  }"
+  class="fixed inset-y-0 left-0 w-64 bg-blue-600 text-white p-6 space-y-6 transition-transform transform lg:translate-x-0 z-50"
+>
+  <h2 class="text-2xl font-bold">Menú</h2>
+  <nav class="space-y-4">
+    <a href="#" class="block hover:underline">Perfil</a>
+    <a href="#" class="block hover:underline">Historial de Actividades</a>
+    <a href="#" class="block hover:underline">Historial de Asistencias</a>
+    <button (click)="logout()" class="block text-red-400 hover:underline">
+      Cerrar Sesión
+    </button>
+    <button (click)="closeMenu()" class="block text-gray-400 hover:underline">
+      Cerrar Menú
+    </button>
+  </nav>
+</aside>

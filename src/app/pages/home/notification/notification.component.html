@@ -1,0 +1,9 @@
+<div
+  *ngIf="message"
+  class="fixed top-4 right-4 bg-blue-500 text-white p-4 rounded shadow-lg"
+>
+  <span>{{ message }}</span>
+  <button (click)="closeNotification()" class="ml-4 text-white font-bold">
+    Cerrar
+  </button>
+</div>
