@@ -7,7 +7,8 @@ import { provideAuth, getAuth } from '@angular/fire/auth';
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { environment } from './environments/environment';
-import { ToastrModule } from 'ngx-toastr'; // Asegúrate de importar ToastrModule
+import { ToastrModule } from 'ngx-toastr';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'; // Asegúrate de importar ToastrModule
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -16,6 +17,6 @@ bootstrapApplication(AppComponent, {
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     provideAuth(() => getAuth()),
     BrowserAnimationsModule,
-    { provide: ToastrModule, useValue: ToastrModule.forRoot() }, // Configura Toastr correctamente
+    { provide: ToastrModule, useValue: ToastrModule.forRoot() }, provideAnimationsAsync(), // Configura Toastr correctamente
   ],
 }).catch((err) => console.error(err));

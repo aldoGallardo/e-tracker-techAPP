@@ -1,7 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
+import { AssignmentDetailComponent } from './assignment-detail/assignment-detail.component';
 
 declare function showNotification(message: string): void;
 
@@ -10,7 +14,7 @@ declare function showNotification(message: string): void;
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule],
 })
 export class HomeComponent implements OnInit {
   userName: string | null = null;
@@ -20,6 +24,7 @@ export class HomeComponent implements OnInit {
   hasCheckedIn = false;
   private apiService = inject(ApiService);
   private authService = inject(AuthService);
+  private dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.loadUserData();
@@ -79,7 +84,7 @@ export class HomeComponent implements OnInit {
     this.apiService.getAssignments(uid).subscribe({
       next: (data) => {
         this.assignments = data;
-        this.loadActivityTypes(); // Cargar tipos de actividad después de cargar asignaciones
+        this.loadActivityTypes();
       },
       error: (error) =>
         console.error('Error al cargar las asignaciones:', error),
@@ -115,6 +120,14 @@ export class HomeComponent implements OnInit {
     const timestamp = new Date().toISOString();
     console.log(`Iniciando asignación: ${assignment.name} a las ${timestamp}`);
     this.showToast(`Asignación "${assignment.name}" iniciada.`);
+  }
+
+  viewAssignment(assignment: any): void {
+    const dialogRef = this.dialog.open(AssignmentDetailComponent, {
+      data: assignment,
+    });
+    console.log(`Viendo detalles de la asignación: ${assignment.name}`);
+    // Aquí puedes agregar la lógica para ver detalles de la asignación.
   }
 
   logout(): void {

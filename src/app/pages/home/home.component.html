@@ -1,11 +1,12 @@
 <div class="relative h-screen">
   <!-- Botón de menú en la esquina superior izquierda -->
   <button
+    mat-mini-fab
     (click)="toggleMenu()"
-    class="absolute top-4 left-4 p-2 text-2xl bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none lg:hidden"
+    class="absolute top-4 left-4 p-1 !bg-blue-500 !text-white rounded hover:bg-blue-600 focus:outline-none lg:hidden"
     aria-label="Abrir menú"
   >
-    ☰
+    <mat-icon>menu</mat-icon>
   </button>
 
   <!-- Overlay para cerrar el menú -->
@@ -38,7 +39,7 @@
   </aside>
 
   <!-- Contenido principal -->
-  <main class="h-full p-10 bg-gray-100">
+  <main class="h-full p-2 bg-gray-100">
     <div class="flex flex-col items-center justify-center h-full">
       <h1 class="text-3xl font-bold text-gray-800 mb-10">
         {{ userName ? "Bienvenido, " + userName + "!" : "Bienvenido!" }}
@@ -67,9 +68,8 @@
           >
             <thead>
               <tr class="bg-blue-100 text-left">
-                <th class="p-3">Número de Orden</th>
+                <th class="p-3">Orden</th>
                 <th class="p-3">Tipo de Actividad</th>
-                <th class="p-3">Acción</th>
               </tr>
             </thead>
             <tbody>
@@ -79,15 +79,15 @@
               >
                 <td class="p-3">{{ assignment.orderNumber }}</td>
                 <td class="p-3">
-                  {{ getActivityTypeName(assignment.activityType) }}
-                </td>
-                <td class="p-3">
-                  <button
-                    (click)="startAssignment(assignment)"
-                    class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                  >
-                    Iniciar
-                  </button>
+                  <div class="flex justify-between items-center">
+                    {{ getActivityTypeName(assignment.activityType) }}
+                    <button
+                      mat-icon-button
+                      (click)="viewAssignment(assignment)"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </div>
                 </td>
               </tr>
               <tr *ngIf="pendingAssignments.length === 0">
@@ -118,11 +118,19 @@
               >
                 <td class="p-3">{{ assignment.orderNumber }}</td>
                 <td class="p-3">
-                  {{ getActivityTypeName(assignment.activityType) }}
+                  <div class="flex justify-between items-center">
+                    {{ getActivityTypeName(assignment.activityType) }}
+                    <button
+                      mat-icon-button
+                      (click)="viewAssignment(assignment)"
+                    >
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </div>
                 </td>
               </tr>
               <tr *ngIf="completedAssignments.length === 0">
-                <td colspan="2" class="text-center p-3 text-gray-500">
+                <td colspan="3" class="text-center p-3 text-gray-500">
                   No hay asignaciones completadas.
                 </td>
               </tr>
