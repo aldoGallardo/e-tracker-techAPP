@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ApiService {
   private http = inject(HttpClient);
-  private readonly baseUrl = 'http://localhost:3000'; // URL base de tu API
+  private readonly baseUrl = 'https://e-tracker-api-production.up.railway.app'; // URL base de tu API
 
   // Obtener los datos del usuario por UID
   getUserData(uid: string): Observable<any> {
